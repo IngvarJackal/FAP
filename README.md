@@ -1,4 +1,4 @@
-<sub><sup>Rev. 0.1-final</sub></sup>
+<sub><sup>Rev. 0.2</sub></sup>
 
 # FAP
 **FAP** is for Fuzzy Automata Platfrom. It's environment for [FAL](https://github.com/IngvarJackal/FAP/blob/master/README.md#fal) execution (Fuzzy Automata Language). Current reference implementation of abstract FAP-machine is [jFAP](https://github.com/IngvarJackal/FAP/blob/master/README.md#jfap).
@@ -14,17 +14,17 @@ Descriptions of automata must be in **TGF** format. Automata are oriented graphs
 
 Beginning of automaton is state with ```start``` command. . There can be multiple final states denoted with ```end stackname``` command. In the case of multiple reached final states random one is used (see [Fuzziness](https://github.com/IngvarJackal/FAP/blob/master/README.md#fuzziness-aka-multithreading-or-non-determinism) section).
 
-An input of automaton is always in stack ```in```.
+An input of automaton is always in stack ```in``` in reverse order like in  ```create stackname string``` command.
 
 ### Commands
 
- * to **create stack** you should write ```create stackname```. You can create stack literals (stack with multiple characters) using ```create stackname string``` to create ```s|t|r|i|n|g``` stack with ```g```  on the top.
+ * to **create stack** you should write ```create stackname```. You can create stack literals (stack with multiple characters) using ```create stackname string``` to create ```g|n|i|r|t|s``` stack with ```s```  on the top.
  * to **destroy stack**, following syntax is used: ```destroy stackname```
- * to **pop** a value from a stack, you should write ```pop stackname```. Result is outputted from state
- * to **push** string into a stack, write ```push stackname``` to push input character of state precondition. Result of state is input character.
+ * to **pop** a value from a stack, you should write ```pop stackname```. Result is outputted from state. Pop of empty stak is always ```\e```
+ * to **push** string into a stack, write ```push stackname``` to push input character of state precondition. Result of state is input character. Push of ```\e``` or empty string won't affect stack.
  * you can **clone stack** with ```clone stackname stackname2```, this command will create or overwrite stack named ```stackname2```
 
- * to **invoke automaton**, use ```call automatonname stackname```. It will load ```automatonname.tgf``` file and register it into FAP to be called. Input of this automaton will be concatenated string of ```stackname```, e.g. ```ccc|bbb|aaa``` stack will become ```aaabbbccc```. The result of automaton call will be placed into ```stackname``` after execution
+ * to **invoke automaton**, use ```call automatonname stackname```. It will load ```automatonname.tgf``` file and register it into FAP to be called. Input of this automaton will be concatenated string of ```stackname```, e.g. ```ccc|bbb|aaa``` stack will become ```aaabbbccc```. The result of automaton call will be placed into ```stackname``` after execution in reverse order like in  ```create stackname string``` command
  * to **substitute** state with an automaton, use ```insert automatonname```, see [Fuzziness](https://github.com/IngvarJackal/FAP/blob/master/README.md#fuzziness-aka-multithreading-or-non-determinism) for details.
  * to mark **starting state**, use ```start``` command. There must be only one state with that entry point.
  * **final states** are marked with ```end stackname``` command. In the case of multiple reached final states, see [Fuzziness](https://github.com/IngvarJackal/FAP/blob/master/README.md#fuzziness-aka-multithreading-or-non-determinism) section.
@@ -33,15 +33,17 @@ An input of automaton is always in stack ```in```.
 
 To use contents of stack in commands instead of predefined literals, use ```#stackname```. It will concatenate stack contents as mentioned in ```call``` command.
 
+Nodes with text starting ```#``` are comments. They must be disconnected from other nodes and will be deleted during automaton loading.
+
 ### Literals
 Escape character is ```\```. To escape ```\``` itself use double escaping ```\\\\```.
 
  * ```\e``` -- end of a string
- * ```\?``` -- any character, used only in edges
+ * ```\?``` -- any character, used only in edges to denote any other non mentioned in other outgoing edges character (but not empty string!).
 
 ### Fuzziness (aka multithreading or non-determinism)
 
-Every state of automaton may have multiple non-exclusive outgoing edges. If condition of transition function met, then new thread of execution spawned. Every thread uses own stacks and doesn't interfere with others.
+Every state of automaton may have multiple outgoing edges. If condition of transition function met, then new thread of execution spawned. Every thread uses own stacks and doesn't interfere with others.
 
 It is guaranteed every thread to be executed until dead end or final state. If there are multiple final states, then one is chosen randomly, e.g. if 3 threads ended in 'a' final state, 1 in 'b' and 1 in 'c', then the probablilty of 'a' result is 3/5.
 

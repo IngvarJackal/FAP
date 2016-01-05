@@ -1,18 +1,18 @@
-<sub><sup>Rev. 0.1</sub></sup>
+<sub><sup>Rev. 0.1-final</sub></sup>
 
 # FAP
-**FAP** is for Fuzzy Automata Platfrom. It's environment for **FAL** execution (Fuzzy Automata Language). Current reference implementation of abstract **FAP-machine** is **jFAP**.
+**FAP** is for Fuzzy Automata Platfrom. It's environment for [FAL](https://github.com/IngvarJackal/FAP/blob/master/README.md#fal) execution (Fuzzy Automata Language). Current reference implementation of abstract FAP-machine is [jFAP](https://github.com/IngvarJackal/FAP/blob/master/README.md#jfap).
 
 # FAL
 **FAL** consists of descriptions of **non-deterministic nested stack automata** with ability to call other automata. It's non typed language -- everything is unicode string.
 
-There are unlimited number of stacks you can create, but they live only in automaton where they are created; no closures. You can manipulate stacks using commands (see **Commands** section).
+There are unlimited number of stacks you can create, but they live only in automaton where they are created; no closures. You can manipulate stacks using commands (see [Commands](https://github.com/IngvarJackal/FAP/blob/master/README.md#commands) section).
 
-To call another automaton, you should provide its name and name of a stack to ```call automatonname stackname``` command (for ```insert automatonname``` see **Fuzziness** section). 
+To call another automaton, you should provide its name and name of a stack to ```call automatonname stackname``` command (for ```insert automatonname``` see [Fuzziness](https://github.com/IngvarJackal/FAP/blob/master/README.md#fuzziness-aka-multithreading-or-non-determinism) section). 
 
 Descriptions of automata must be in **TGF** format. Automata are oriented graphs. Nodes of a graph contain commands for FAP, edges contain conditions for state transition. Both nodes and edges are strings of **unicode alphabet mixed with literals**. Name of automaton is name of a file before  ```.tgf ``` and in one file must be only one automaton.
 
-Beginning of automaton is state with ```start``` command. . There can be multiple final states denoted with ```end stackname``` command. In the case of multiple reached final states random one is used (see **Fuzziness** section).
+Beginning of automaton is state with ```start``` command. . There can be multiple final states denoted with ```end stackname``` command. In the case of multiple reached final states random one is used (see [Fuzziness](https://github.com/IngvarJackal/FAP/blob/master/README.md#fuzziness-aka-multithreading-or-non-determinism) section).
 
 An input of automaton is always in stack ```in```.
 
@@ -25,9 +25,9 @@ An input of automaton is always in stack ```in```.
  * you can **clone stack** with ```clone stackname stackname2```, this command will create or overwrite stack named ```stackname2```
 
  * to **invoke automaton**, use ```call automatonname stackname```. It will load ```automatonname.tgf``` file and register it into FAP to be called. Input of this automaton will be concatenated string of ```stackname```, e.g. ```ccc|bbb|aaa``` stack will become ```aaabbbccc```. The result of automaton call will be placed into ```stackname``` after execution
- * to **substitute** state with an automaton, use ```insert automatonname```, see **Fuzziness** for details.
+ * to **substitute** state with an automaton, use ```insert automatonname```, see [Fuzziness](https://github.com/IngvarJackal/FAP/blob/master/README.md#fuzziness-aka-multithreading-or-non-determinism) for details.
  * to mark **starting state**, use ```start``` command. There must be only one state with that entry point.
- * **final states** are marked with ```end stackname``` command. In the case of multiple reached final states, see **Fuzziness** section.
+ * **final states** are marked with ```end stackname``` command. In the case of multiple reached final states, see [Fuzziness](https://github.com/IngvarJackal/FAP/blob/master/README.md#fuzziness-aka-multithreading-or-non-determinism) section.
  
  * ``` ``` (empty or whitespace contents of state) means ```pop in``` command
 
@@ -54,4 +54,4 @@ In the case of ```insert automatonname``` usage, there will be no final collapsi
 
  * Java Virtual Machine
  * green threads
- * new ```invoke ru.org.codingteam.fap.death.Adder.apply stackname``` command, which calls java method from Adder class in registered jar library. It works like ```call` command.
+ * new ```invoke ru.org.codingteam.fap.death.Adder.apply stackname``` command, which calls java method from Adder class in registered jar library. It works like ```call``` command.

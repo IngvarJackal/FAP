@@ -1,0 +1,43 @@
+1 start
+2 create mrStk Mr. F
+3 create sirStk sir R
+4 create resStk hello, 
+5 pop mrStk
+6 push resStk
+7 pop sirStk
+8 push resStk
+9 push resStk
+10 push resStk
+11 create final
+12 pop resStk
+13 push final
+14 end final
+15 #copy contents of stack mrStk to stack resStk
+16 #revert stack
+#
+4 2 F
+4 2 f
+4 3 r
+4 3 R
+2 5
+5 6
+6 5
+7 8
+8 7
+3 7
+5 9 \e
+7 9 \e
+4 10 \?
+10 9
+9 9
+9 11 \e
+11 12 \e
+12 13
+13 12
+13 14 \e
+1 4
+6 5 \e
+8 7 \e
+12 14 \e
+10 9
+10 9 \e

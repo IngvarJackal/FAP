@@ -45,7 +45,7 @@ public class Condition {
     }
 
     public Boolean isEmpty() {
-        return text.isEmpty();
+        return text == null;
     }
 
     public Node getTo() {
@@ -54,7 +54,7 @@ public class Condition {
 
     @Override
     public String toString() {
-        return from + " (" + (text != null ? text : " ") + ") -> " + to;
+        return from + " --(" + (text != null ? text : " ") + ")-> " + to;
     }
 
     @Override

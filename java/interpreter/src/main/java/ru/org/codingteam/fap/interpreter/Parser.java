@@ -104,6 +104,7 @@ public class Parser {
         }
 
         Node node = new Node(line.replace("\n", ""), type);
+        node.getArgs().addAll(args);
         if (nodes.get(number) != null) {
             throw new ValidationException("Node is defined twice " + number);
         } else {
@@ -126,7 +127,12 @@ public class Parser {
             throw new ValidationException("Node is not found " + from + " -> " + to);
         }
 
-        Condition condition = new Condition(strings[2], from, to);
+        Condition condition;
+        if (strings.length == 3) {
+            condition = new Condition(strings[2], from, to);
+        } else {
+            condition = new Condition(null, from, to);
+        }
         for (Condition nodeCondition: from.getConditions()) {
             if (condition.equals(nodeCondition)) {
                 throw new ValidationException("Duplicated condition " + condition);

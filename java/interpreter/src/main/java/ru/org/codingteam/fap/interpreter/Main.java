@@ -1,42 +1,32 @@
 package ru.org.codingteam.fap.interpreter;
 
 import javafx.util.Pair;
+import ru.org.codingteam.fap.infrastructure.Debug;
 import ru.org.codingteam.fap.infrastructure.Node;
 import ru.org.codingteam.fap.infrastructure.Program;
 import ru.org.codingteam.fap.infrastructure.Stack;
 import ru.org.codingteam.fap.infrastructure.context.Context;
-import ru.org.codingteam.fap.infrastructure.exceptions.FapException;
 import ru.org.codingteam.fap.runtime.Runtime;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+        if (args.length != 2) {
+            System.out.println("program has two args: name of the program and initial input");
+            return;
+        }
+
         String filename = args[0];
         String inStack = args[1];
 
-        StringBuilder sb = new StringBuilder();
-        try {
-            FileReader fileReader = new FileReader(filename);
+        Program program = Parser.parse(new String(Files.readAllBytes(Paths.get(filename))), filename);
 
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-            String line;
-            while((line = bufferedReader.readLine()) != null) {
-                sb.append(line);
-            }
-
-            bufferedReader.close();
-        } catch(IOException e) {
-            throw new FapException(e);
-        }
-
-        Program program = Parser.parse(sb.toString(), filename);
+        Debug.debug("Program parserd " + program);
 
         ExecutorService executorService = Executors.newWorkStealingPool();
         Runtime runtime = new Runtime(executorService);

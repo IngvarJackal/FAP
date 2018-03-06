@@ -1,0 +1,8 @@
+1 start
+2 create aaa Hello, world!
+3 end aaa
+#
+1 2
+1 2 \e
+2 3
+2 3 \e

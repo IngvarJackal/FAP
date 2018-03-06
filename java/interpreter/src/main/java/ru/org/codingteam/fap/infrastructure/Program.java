@@ -16,4 +16,13 @@ public class Program {
     public Node getStart() {
         return start;
     }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Program{");
+        sb.append("name='").append(name).append('\'');
+        sb.append(", start=").append(start);
+        sb.append('}');
+        return sb.toString();
+    }
 }

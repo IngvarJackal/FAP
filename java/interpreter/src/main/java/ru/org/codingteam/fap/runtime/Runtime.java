@@ -37,7 +37,7 @@ public class Runtime {
                             if (curNode.getKey().getType().equals(Node.CommandType.END)) {
                                 doneNodes.add(curNode);
                             } else {
-                                doneNodes.addAll(evaluate(node, state));
+                                doneNodes.addAll(evaluate(curNode.getKey(), curNode.getValue()));
                             }
                         }
                         return doneNodes;
@@ -115,14 +115,12 @@ public class Runtime {
         */
         ArrayList<Pair<Node, Context>> nextNodes = new ArrayList<>();
         for (Condition condition : node.getConditions()) {
-            if (condition.isEmpty()) {
-                nextNodes.add(new Pair<>(condition.getTo(), state.copy()));
-            } else {
-                if (condition.matches(state.getStack("in").peek())) {
-                    Context newState = state.copy();
+            if (condition.matches(state.getStack("in").peek())) {
+                Context newState = state.copy();
+                if (!condition.isEmpty()) {
                     newState.getStack("in").pop();
-                    nextNodes.add(new Pair<>(condition.getTo(), newState));
                 }
+                nextNodes.add(new Pair<>(condition.getTo(), newState));
             }
         }
 

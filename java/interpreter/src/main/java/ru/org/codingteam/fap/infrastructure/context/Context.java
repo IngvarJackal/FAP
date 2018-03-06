@@ -57,4 +57,12 @@ public class Context {
             stacks.put(newStackName, stack.copy());
         }
     }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Context{");
+        sb.append("stacks=").append(stacks);
+        sb.append('}');
+        return sb.toString();
+    }
 }

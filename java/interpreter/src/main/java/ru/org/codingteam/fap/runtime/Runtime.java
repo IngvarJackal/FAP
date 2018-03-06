@@ -56,7 +56,11 @@ public class Runtime {
                 if (node.getArgs().size() == 1) {
                     state.makeStack(processArg(node.getArgs().get(0), state));
                 } else if (node.getArgs().size() == 2) {
-                    state.makeStack(processArg(node.getArgs().get(0), state), processArg(node.getArgs().get(1), state));
+                    if (node.getArgs().get(1).startsWith("#")) {
+                        state.makeStack(processArg(node.getArgs().get(0), state), processArg(node.getArgs().get(1), state));
+                    } else {
+                        state.makeStack(processArg(node.getArgs().get(0), state), new StringBuilder(node.getArgs().get(1)).reverse().toString());
+                    }
                 }
                 break;
             }
@@ -85,7 +89,11 @@ public class Runtime {
                 } catch (StateException e) {
                     throw new StateException("'in' stack is deleted!");
                 }
-                state.getStack(processArg(node.getArgs().get(0), state)).put(ch);
+                if (ch.equals("\\e")) {
+                    // don't insert end of line
+                } else {
+                    state.getStack(processArg(node.getArgs().get(0), state)).put(ch);
+                }
                 break;
             }
         }
@@ -94,10 +102,10 @@ public class Runtime {
             LIBRARY OPERATIONS
         */
         switch (node.getType()) {
-            case SUBSTITUTE: {
+            case INSERT: {
                 throw new RuntimeException("Not Implemented Yet");
             }
-            case INVOKE: {
+            case CALL: {
                 throw new RuntimeException("Not Implemented Yet");
             }
         }
@@ -108,12 +116,12 @@ public class Runtime {
         ArrayList<Pair<Node, Context>> nextNodes = new ArrayList<>();
         for (Condition condition : node.getConditions()) {
             if (condition.isEmpty()) {
-                nextNodes.add(new Pair<>(condition.getNext(), state.copy()));
+                nextNodes.add(new Pair<>(condition.getTo(), state.copy()));
             } else {
                 if (condition.matches(state.getStack("in").peek())) {
                     Context newState = state.copy();
                     newState.getStack("in").pop();
-                    nextNodes.add(new Pair<>(condition.getNext(), newState));
+                    nextNodes.add(new Pair<>(condition.getTo(), newState));
                 }
             }
         }
@@ -121,7 +129,7 @@ public class Runtime {
         return nextNodes;
     }
 
-    private String processArg(String arg, Context state) {
+    public String processArg(String arg, Context state) {
         if (arg.startsWith("#")) {
             return state.getStack(arg.substring(1)).makeReversedString();
         } else {

@@ -21,19 +21,19 @@ An input of automaton is always in stack ```in``` in reverse order like in  ```c
  * to **create stack** you should write ```create stackname```. You can create stack literals (stack with multiple characters) using ```create stackname string``` to create ```g|n|i|r|t|s``` stack with ```s```  on the top.
  * to **destroy stack**, following syntax is used: ```destroy stackname```
  * to **pop** a value from a stack, you should write ```pop stackname```. Result is outputted from state. Pop of empty stak is always ```\e```
- * to **push** string into a stack, write ```push stackname``` to push input character of state precondition. Result of state is input character. Push of ```\e``` or empty string won't affect stack.
+ * to **push** string into a stack, write ```push stackname``` to push input character of state precondition. Result of state is input character. Push of ```\e``` won't affect stack.
  * you can **clone stack** with ```clone stackname stackname2```, this command will create or overwrite stack named ```stackname2```
 
  * to **invoke automaton**, use ```call automatonname stackname```. It will load ```automatonname.tgf``` file and register it into FAP to be called. Input of this automaton will be concatenated string of ```stackname```, e.g. ```ccc|bbb|aaa``` stack will become ```aaabbbccc```. The result of automaton call will be placed into ```stackname``` after execution in reverse order like in  ```create stackname string``` command
  * to **substitute** state with an automaton, use ```insert automatonname```, see [Fuzziness](https://github.com/IngvarJackal/FAP#fuzziness-aka-multithreading-or-non-determinism) for details.
  * to mark **starting state**, use ```start``` command. There must be only one state with that entry point.
  * **final states** are marked with ```end stackname``` command. In the case of multiple reached final states, see [Fuzziness](https://github.com/IngvarJackal/FAP#fuzziness-aka-multithreading-or-non-determinism) section.
- 
- * ``` ``` (empty or whitespace contents of state) means ```pop in``` command
 
 To use contents of stack in commands instead of predefined literals, use ```#stackname```. It will concatenate stack contents as mentioned in ```call``` command.
 
 Nodes with text starting ```#``` are comments. They must be disconnected from other nodes and will be deleted during automaton loading.
+
+Spaces are forbidden in names of stacks.
 
 ### Literals
 Escape character is ```\```. To escape ```\``` itself use double escaping ```\\\\```.

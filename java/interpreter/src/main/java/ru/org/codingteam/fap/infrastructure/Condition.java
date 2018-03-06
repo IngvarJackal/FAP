@@ -1,37 +1,73 @@
 package ru.org.codingteam.fap.infrastructure;
 
-import java.util.function.Function;
+import ru.org.codingteam.fap.infrastructure.exceptions.ValidationException;
+
+import java.util.Objects;
+import java.util.function.BiFunction;
 
 public class Condition {
     private final String text;
-    private final Node next;
+    private final Node to;
+    private final Node from;
 
-    private Function<String, Boolean> matcher;
+    private BiFunction<String, Node, Boolean> matcher;
 
-    public Condition(String text, Node next) {
+    public Condition(String text, Node from, Node to) {
         this.text = text;
-        this.next = next;
-        if (text.equalsIgnoreCase("\\?")) {
-            matcher = s -> !s.equals("\\e");
+        this.from = from;
+        this.to = to;
+        if (text == null) { // empty arrow
+            matcher = (s, node) -> {
+                return !s.equals("\\e");
+            };
+        } else if (text.equalsIgnoreCase("\\?")) { // question mark
+            matcher = (s, node) -> {
+                for (Condition condition : node.getConditions()) {
+                    if (!condition.equals(this)) {
+                        if (condition.matches(s)) {
+                            return false;
+                        }
+                    }
+                }
+                return !s.equals("\\e");
+            };
+        } else if (text.equalsIgnoreCase("\\e")) { // end of string
+            matcher = (s, node) -> {
+                return s.equals(text);
+            };
         } else {
-            matcher = s -> s.equals(text);
+            throw new ValidationException("illegal transition identifier " + text);
         }
     }
 
     public Boolean matches(String s) {
-        return matcher.apply(s);
+        return matcher.apply(s, from);
     }
 
     public Boolean isEmpty() {
         return text.isEmpty();
     }
 
-    public Node getNext() {
-        return next;
+    public Node getTo() {
+        return to;
     }
 
     @Override
     public String toString() {
-        return text + " -> " + next;
+        return from + " (" + (text != null ? text : " ") + ") -> " + to;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Condition condition = (Condition) o;
+        return Objects.equals(text, condition.text) &&
+                Objects.equals(from, condition.from);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(text, from);
     }
 }

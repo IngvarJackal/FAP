@@ -1,0 +1,49 @@
+1 start
+2 create mr mr. F
+3 create hello Hello, 
+4 create name
+5 push name
+6 create mr
+7 end in
+8 pop mr
+9 push reversedMr
+10 create reversedMr
+11 end result
+12 pop reversedMr
+13 push result
+14 pop reversedHello
+15 push result
+16 create result
+17 pop hello
+18 push reversedHello
+19 create reversedHello
+20 pop name
+21 push result
+#
+1 3
+3 2 F
+2 4
+4 5
+5 5
+6 4
+3 6
+1 7 \e
+8 9
+9 8 \e
+10 8 \e
+12 13
+13 12 \e
+14 15
+15 14 \e
+12 14 \e
+14 11 \e
+17 18
+18 17 \e
+19 17 \e
+8 19 \e
+17 16 \e
+20 21
+21 20 \e
+16 20 \e
+20 12 \e
+5 10 \e

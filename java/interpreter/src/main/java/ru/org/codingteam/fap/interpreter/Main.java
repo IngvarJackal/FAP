@@ -35,7 +35,7 @@ public class Main {
         for (Pair<Node, Context> pair : result) {
             String stackname = runtime.processArg(pair.getKey().getArgs().get(0), pair.getValue()); // name of stack
             Stack stack = pair.getValue().getStack(stackname);
-            System.out.println(pair.getKey() + " -> " + stack);
+            System.out.println(pair.getKey() + " -> " + stack.makeReversedString());
         }
     }
 }

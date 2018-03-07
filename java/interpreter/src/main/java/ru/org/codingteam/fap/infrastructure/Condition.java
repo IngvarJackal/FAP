@@ -16,11 +16,7 @@ public class Condition {
         this.text = text;
         this.from = from;
         this.to = to;
-        if (text == null) { // empty arrow
-            matcher = (s, node) -> {
-                return !s.equals("\\e");
-            };
-        } else if (text.equalsIgnoreCase("\\?")) { // question mark
+        if (text == null || text.equalsIgnoreCase("\\?")) { // empty arrow
             matcher = (s, node) -> {
                 for (Condition condition : node.getConditions()) {
                     if (!condition.equals(this)) {
@@ -36,7 +32,13 @@ public class Condition {
                 return s.equals(text);
             };
         } else {
-            throw new ValidationException("illegal transition identifier " + text);
+            if (text.isEmpty()) {
+                throw new ValidationException("illegal transition identifier " + text);
+            } else {
+                matcher = (s, node) -> {
+                    return s.equals(text);
+                };
+            }
         }
     }
 

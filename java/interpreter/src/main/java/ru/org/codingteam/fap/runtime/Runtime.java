@@ -2,6 +2,7 @@ package ru.org.codingteam.fap.runtime;
 
 import javafx.util.Pair;
 import ru.org.codingteam.fap.infrastructure.Condition;
+import ru.org.codingteam.fap.infrastructure.Debug;
 import ru.org.codingteam.fap.infrastructure.Node;
 import ru.org.codingteam.fap.infrastructure.Program;
 import ru.org.codingteam.fap.infrastructure.context.Context;
@@ -24,7 +25,7 @@ public class Runtime {
     public List<Pair<Node, Context>> start(Program program, String inStack) {
         Node start = program.getStart();
         Context state = new Context();
-        state.makeStack("in", inStack);
+        state.makeStack("in", new StringBuilder(inStack).reverse().toString());
         return evaluate(start, state);
     }
 
@@ -48,6 +49,7 @@ public class Runtime {
     }
 
     private List<Pair<Node, Context>> evaluateNode(Node node, Context state) {
+        Debug.debug("Evaluating node " + node + " " + state);
         /*
             STACK OPERATIONS
         */

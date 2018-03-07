@@ -48,11 +48,7 @@ public class Parser {
             case "create": {
                 args.add(strings[2]); // name
                 if (strings.length > 3) { // value
-                    StringBuilder value = new StringBuilder();
-                    for (int i = 3; i < strings.length; i++) {
-                        value.append(strings[i]);
-                    }
-                    args.add(value.toString());
+                    args.add(line.substring(line.indexOf(strings[3])));
                 }
                 type = Node.CommandType.CREATE;
                 break;
